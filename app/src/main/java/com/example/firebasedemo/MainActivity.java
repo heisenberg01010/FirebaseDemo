@@ -90,8 +90,24 @@ public class MainActivity extends AppCompatActivity {
         data5.put("regions", Arrays.asList("jingjinji", "hebei"));
         cities.document("BJ").set(data5);
 
-        DocumentReference docRef = db.collection("cities").document("SF");
-        //Source 
+        db.collection("cities")
+                .whereEqualTo("name","Beijing" )
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Toast.makeText(MainActivity.this, document.getId() + " => " + document.getData(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Error" + task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+/*        DocumentReference docRef = db.collection("cities").document("SF");
+        //Source
         Source source = Source.CACHE;
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -110,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
 
     }
