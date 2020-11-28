@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class FirebaseStore extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private final int RC_SIGN_IN = 123;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -46,14 +46,14 @@ public class FirebaseStore extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setAccountData();
+        /*setAccountData();
         setDataOnFireStore();
         deleteDataFromFstore();
         batchWrite();
         txn();
         orderAccountsByBal();
         listenToRealtimeUpdates();
-
+*/
         createSignInIntent();
         signOut();
         delete();
@@ -65,10 +65,9 @@ public class FirebaseStore extends AppCompatActivity {
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build(),
-                new AuthUI.IdpConfig.TwitterBuilder().build());
+                new AuthUI.IdpConfig.GoogleBuilder().build());
+
+
 
         // Create and launch sign-in intent
         startActivityForResult(
@@ -136,13 +135,13 @@ public class FirebaseStore extends AppCompatActivity {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
                         if (e!=null){
-                            Toast.makeText(FirebaseStore.this, "Error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                         }
                         if (snapshot!=null&&snapshot.exists()){
-                            Toast.makeText(FirebaseStore.this, ""+snapshot.getId()+" "+snapshot.get("name"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, ""+snapshot.getId()+" "+snapshot.get("name"), Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(FirebaseStore.this, "Details does not exist!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Details does not exist!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -156,14 +155,14 @@ public class FirebaseStore extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                        Toast.makeText(FirebaseStore.this, "" + snapshot.getData(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "" + snapshot.getData(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
     }
 
-    private void txn() {
+    /*private void txn() {
         final int amt = 20;
         //To run a transaction
         db.runTransaction(new Transaction.Function<Integer>() {
@@ -186,12 +185,12 @@ public class FirebaseStore extends AppCompatActivity {
             @Override
             public void onSuccess(Integer bal) {
                 if (bal == -1) {
-                    new AlertDialog.Builder(FirebaseStore.this)
+                    new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Insufficient balance")
                             .setMessage("Insufficient balance in the account")
                             .show();
                 } else {
-                    new AlertDialog.Builder(FirebaseStore.this)
+                    new AlertDialog.Builder(MainActivity.this)
                             .setMessage("Your balance is " + bal)
                             .setTitle("Transaction completed")
                             .show();
@@ -201,19 +200,19 @@ public class FirebaseStore extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(FirebaseStore.this, "Failure!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Failure!!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
-    private void setAccountData() {
+    /*private void setAccountData() {
         WriteBatch batch = db.batch();
 
         batch.set(db.collection("accounts").document("a"), new Account(100, "a"));
         batch.set(db.collection("accounts").document("b"), new Account(50, "b"));
 
         batch.commit();
-    }
+    }*/
 
     private void batchWrite() {
         WriteBatch batch = db.batch();
@@ -232,13 +231,13 @@ public class FirebaseStore extends AppCompatActivity {
         batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(FirebaseStore.this, "Batch writed succesfully!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Batch writed succesfully!!", Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(FirebaseStore.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         })
         ;
@@ -251,12 +250,12 @@ public class FirebaseStore extends AppCompatActivity {
                 .document("jai").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(FirebaseStore.this, "User deleted from db", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "User deleted from db", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(FirebaseStore.this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
             }
         });
     }
